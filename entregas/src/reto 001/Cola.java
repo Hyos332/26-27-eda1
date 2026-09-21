@@ -25,4 +25,16 @@ public class Cola {
     public int retirarClientesAburridos(int minutoActual, double probabilidadAburrirse) {
         return 0;
     }
+
+    public boolean entregarComprasAOtroCliente() {
+        return false;
+    }
+
+    public boolean hayClientes() {
+        return false;
+    }
+
+    public int obtenerCantidadPersonasEnCola() {
+        return 0;
+    }
 }
