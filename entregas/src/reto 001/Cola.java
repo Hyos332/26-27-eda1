@@ -91,11 +91,40 @@ public class Cola {
     }
 
     public int retirarClientesAburridos(int minutoActual, double probabilidadAburrirse) {
-        return 0;
+        int clientesRetirados = 0;
+        int i = 0;
+
+        while (i < tamano) {
+            if (clientes[i].llevaMasDe(minutoActual, 8)
+                && Math.random() <= probabilidadAburrirse) {
+
+                quitarClienteEn(i);
+                clientesRetirados = clientesRetirados + 1;
+            } else {
+                i = i + 1;
+            }
+        }
+
+        return clientesRetirados;
     }
 
     public boolean entregarComprasAOtroCliente() {
-        return false;
+        boolean entregaRealizada = false;
+
+        if (tamano > 1) {
+            int posicionEntrega = (int) (Math.random() * tamano);
+            int posicionRecibe = (int) (Math.random() * tamano);
+
+            while (posicionRecibe == posicionEntrega) {
+                posicionRecibe = (int) (Math.random() * tamano);
+            }
+
+            clientes[posicionRecibe].recibirCompras();
+            quitarClienteEn(posicionEntrega);
+            entregaRealizada = true;
+        }
+
+        return entregaRealizada;
     }
 
     public boolean hayClientes() {
