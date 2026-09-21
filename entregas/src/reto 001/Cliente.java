@@ -20,17 +20,18 @@ public class Cliente {
     }
 
     public boolean esPreferente() {
-        return false;
+        return preferente;
     }
 
     public boolean llevaMasDe(int minutoActual, int minutos) {
-        return false;
+        return minutoActual - minutoLlegada > minutos;
     }
 
     public void recibirCompras() {
+        comprasRecibidas = comprasRecibidas + 1;
     }
 
     public int obtenerComprasRecibidas() {
-        return 0;
+        return comprasRecibidas;
     }
 }
