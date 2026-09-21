@@ -10,26 +10,12 @@ public class Tiempo {
     }
 
     public boolean haFinalizado() {
-        final int DURACION = 120;
+        final int DURACION = 240;
 
         return minuto >= DURACION;
     }
 
     public int minuto() {
         return minuto;
-    }
-
-    public boolean reglasExtendidasActivas() {
-        final int MINUTO_INICIO_REGLAS_EXTENDIDAS = 20;
-
-        return minuto >= MINUTO_INICIO_REGLAS_EXTENDIDAS;
-    }
-
-    public boolean esMomentoDeRevisarAburridos() {
-        return this.reglasExtendidasActivas() && minuto % 5 == 0;
-    }
-
-    public boolean esMomentoDeParlante() {
-        return minuto % 15 == 0;
     }
 }
