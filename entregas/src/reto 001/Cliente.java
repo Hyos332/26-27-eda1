@@ -9,4 +9,12 @@ public class Cliente {
     public int obtenerMinutoLlegada() {
         return 0;
     }
+
+    public boolean esPreferente() {
+        return false;
+    }
+
+    public boolean llevaMasDe(int minutoActual, int minutos) {
+        return false;
+    }
 }
