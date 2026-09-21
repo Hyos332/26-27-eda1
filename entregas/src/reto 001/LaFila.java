@@ -52,6 +52,11 @@ public class LaFila {
     private void simularMinuto() {
         procesarLlegadaNormal();
         procesarAtencion();
+
+        if (tiempo.obtenerMinutoActual() >= MINUTO_INICIO_REGLAS_EXTENDIDAS) {
+            procesarReglasExtendidas();
+        }
+
         mostrarEstado();
     }
 
@@ -69,6 +74,39 @@ public class LaFila {
         }
     }
 
+    private void procesarReglasExtendidas() {
+        procesarAburridos();
+        procesarLlegadaPreferente();
+        procesarColado();
+    }
+
+    private void procesarAburridos() {
+        int retirados = 0;
+
+        if (tiempo.esMomentoDeRevisarAburridos()) {
+            retirados = cola.retirarClientesAburridos(
+                tiempo.obtenerMinutoActual(),
+                PROBABILIDAD_ABURRIRSE
+            );
+        }
+
+        personasAburridas = personasAburridas + retirados;
+    }
+
+    private void procesarLlegadaPreferente() {
+        if (Math.random() <= PROBABILIDAD_PREFERENTE) {
+            Cliente cliente = crearCliente(true);
+            intentarAnadirClientePreferente(cliente);
+        }
+    }
+
+    private void procesarColado() {
+        if (cola.hayClientes() && Math.random() <= PROBABILIDAD_COLADO) {
+            Cliente cliente = crearCliente(false);
+            intentarAnadirClienteColado(cliente);
+        }
+    }
+
     private Cliente crearCliente(boolean preferente) {
         Cliente cliente = new Cliente(
             siguienteNumeroCliente,
@@ -83,6 +121,14 @@ public class LaFila {
 
     private void intentarAnadirClienteNormal(Cliente cliente) {
         cola.anadirCliente(cliente);
+    }
+
+    private void intentarAnadirClientePreferente(Cliente cliente) {
+        cola.anadirClientePreferente(cliente);
+    }
+
+    private void intentarAnadirClienteColado(Cliente cliente) {
+        cola.anadirClienteColado(cliente);
     }
 
     private void mostrarEstado() {
