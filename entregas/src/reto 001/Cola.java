@@ -69,9 +69,25 @@ public class Cola {
     }
 
     public void anadirClientePreferente(Cliente cliente) {
+        int posicion = 0;
+
+        for (int i = 0; i < tamano; i++) {
+            if (clientes[i].esPreferente()) {
+                posicion = i + 1;
+            }
+        }
+
+        insertarClienteEn(posicion, cliente);
     }
 
     public void anadirClienteColado(Cliente cliente) {
+        int posicionConocido = 0;
+
+        if (tamano > 0) {
+            posicionConocido = (int) (Math.random() * tamano);
+        }
+
+        insertarClienteEn(posicionConocido + 1, cliente);
     }
 
     public int retirarClientesAburridos(int minutoActual, double probabilidadAburrirse) {
