@@ -38,5 +38,67 @@ public class LaFila {
     }
 
     public void simular() {
+        console.writeln("Simulacion laFila");
+        console.writeln("-----------------");
+
+        while (!tiempo.haFinalizado()) {
+            tiempo.avanzar();
+            simularMinuto();
+        }
+
+        mostrarResumen();
+    }
+
+    private void simularMinuto() {
+        procesarLlegadaNormal();
+        procesarAtencion();
+        mostrarEstado();
+    }
+
+    private void procesarLlegadaNormal() {
+        if (Math.random() <= PROBABILIDAD_LLEGADA) {
+            Cliente cliente = crearCliente(false);
+            intentarAnadirClienteNormal(cliente);
+        }
+    }
+
+    private void procesarAtencion() {
+        if (cola.hayClientes() && Math.random() <= PROBABILIDAD_CAJA_LIBRE) {
+            cola.quitarCliente();
+            personasAtendidas = personasAtendidas + 1;
+        }
+    }
+
+    private Cliente crearCliente(boolean preferente) {
+        Cliente cliente = new Cliente(
+            siguienteNumeroCliente,
+            tiempo.obtenerMinutoActual(),
+            preferente
+        );
+
+        siguienteNumeroCliente = siguienteNumeroCliente + 1;
+
+        return cliente;
+    }
+
+    private void intentarAnadirClienteNormal(Cliente cliente) {
+        cola.anadirCliente(cliente);
+    }
+
+    private void mostrarEstado() {
+        int longitudFila = cola.obtenerCantidadPersonasEnCola();
+
+        console.writeln("Minuto " + tiempo.obtenerMinutoActual()
+            + " | fila: " + longitudFila
+            + " personas | longitud: " + longitudFila + " metros");
+    }
+
+    private void mostrarResumen() {
+        console.writeln();
+        console.writeln("Resumen");
+        console.writeln("-------");
+        console.writeln("Personas atendidas: " + personasAtendidas);
+        console.writeln("Personas en fila al cierre: "
+            + cola.obtenerCantidadPersonasEnCola());
     }
 }
