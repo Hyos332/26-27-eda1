@@ -1,35 +1,22 @@
 public class LaFila {
-    private final int DURACION_SIMULACION = 120;
-    private final int MINUTO_INICIO_REGLAS_EXTENDIDAS = 20;
-    private final int TAMANO_FILA_LARGA = 30;
-    private final int TAMANO_AVISO_PARLANTE = 25;
-
-    private final double PROBABILIDAD_LLEGADA = 0.6;
-    private final double PROBABILIDAD_CAJA_LIBRE = 0.4;
-    private final double PROBABILIDAD_ABURRIRSE = 0.3;
-    private final double PROBABILIDAD_DESISTIR = 0.5;
-    private final double PROBABILIDAD_PREFERENTE = 0.1;
-    private final double PROBABILIDAD_COLADO = 0.1;
-    private final double PROBABILIDAD_ENTREGA_COMPRAS = 0.05;
-
     private Cola cola;
     private Tiempo tiempo;
-    private Console console;
     private int personasAtendidas;
+    private Console console;
     private int personasDesistieron;
     private int personasAburridas;
     private int personasQueEntregaronCompras;
-    private int siguienteNumeroCliente;
+    private int numeroCliente;
 
     public LaFila() {
         cola = new Cola();
-        tiempo = new Tiempo(DURACION_SIMULACION);
-        console = new Console();
+        tiempo = new Tiempo();
         personasAtendidas = 0;
+        console = new Console();
         personasDesistieron = 0;
         personasAburridas = 0;
         personasQueEntregaronCompras = 0;
-        siguienteNumeroCliente = 1;
+        numeroCliente = 1;
     }
 
     public static void main(String[] args) {
@@ -42,47 +29,56 @@ public class LaFila {
         console.writeln("-----------------");
 
         while (!tiempo.haFinalizado()) {
+            this.procesarLlegadaCliente();
+            this.procesarAtencion();
+
+            if (tiempo.reglasExtendidasActivas()) {
+                this.procesarReglasNuevas();
+            }
+
+            this.procesarParlante();
+            this.mostrarEstado();
             tiempo.avanzar();
-            simularMinuto();
         }
 
-        mostrarResumen();
+        this.mostrarResumen();
     }
 
-    private void simularMinuto() {
-        procesarLlegadaNormal();
-        procesarAtencion();
-
-        if (tiempo.obtenerMinutoActual() >= MINUTO_INICIO_REGLAS_EXTENDIDAS) {
-            procesarReglasExtendidas();
-        }
-
-        procesarParlante();
-        mostrarEstado();
-    }
-
-    private void procesarLlegadaNormal() {
-        if (Math.random() <= PROBABILIDAD_LLEGADA) {
+    private void procesarLlegadaCliente() {
+        if (this.llegaCliente()) {
             Cliente cliente = crearCliente(false);
-            intentarAnadirClienteNormal(cliente);
+            this.anadirClienteSiEntra(cliente);
         }
+    }
+
+    private boolean llegaCliente() {
+        final double PROBABILIDAD_LLEGADA = 0.6;
+
+        return Math.random() <= PROBABILIDAD_LLEGADA;
     }
 
     private void procesarAtencion() {
-        if (cola.hayClientes() && Math.random() <= PROBABILIDAD_CAJA_LIBRE) {
+        if (this.hayCajaLibre() && cola.hayClientes()) {
             cola.quitarCliente();
             personasAtendidas = personasAtendidas + 1;
         }
     }
 
-    private void procesarReglasExtendidas() {
-        procesarAburridos();
-        procesarLlegadaPreferente();
-        procesarColado();
-        procesarEntregaCompras();
+    private boolean hayCajaLibre() {
+        final double PROBABILIDAD_CAJA_LIBRE = 0.4;
+
+        return Math.random() <= PROBABILIDAD_CAJA_LIBRE;
+    }
+
+    private void procesarReglasNuevas() {
+        this.procesarAburridos();
+        this.procesarPreferente();
+        this.procesarColado();
+        this.procesarEntregaCompras();
     }
 
     private void procesarAburridos() {
+        final double PROBABILIDAD_ABURRIRSE = 0.3;
         int retirados = 0;
 
         if (tiempo.esMomentoDeRevisarAburridos()) {
@@ -95,87 +91,117 @@ public class LaFila {
         personasAburridas = personasAburridas + retirados;
     }
 
-    private void procesarLlegadaPreferente() {
-        if (Math.random() <= PROBABILIDAD_PREFERENTE) {
+    private void procesarPreferente() {
+        if (this.llegaClientePreferente()) {
             Cliente cliente = crearCliente(true);
-            intentarAnadirClientePreferente(cliente);
+            this.anadirPreferenteSiEntra(cliente);
         }
+    }
+
+    private boolean llegaClientePreferente() {
+        final double PROBABILIDAD_PREFERENTE = 0.1;
+
+        return Math.random() <= PROBABILIDAD_PREFERENTE;
     }
 
     private void procesarColado() {
-        if (cola.hayClientes() && Math.random() <= PROBABILIDAD_COLADO) {
+        if (cola.hayClientes() && this.hayColado()) {
             Cliente cliente = crearCliente(false);
-            intentarAnadirClienteColado(cliente);
+            this.anadirColadoSiEntra(cliente);
         }
     }
 
+    private boolean hayColado() {
+        final double PROBABILIDAD_COLADO = 0.1;
+
+        return Math.random() <= PROBABILIDAD_COLADO;
+    }
+
     private void procesarEntregaCompras() {
-        if (Math.random() <= PROBABILIDAD_ENTREGA_COMPRAS) {
+        if (this.alguienEntregaCompras()) {
             if (cola.entregarComprasAOtroCliente()) {
                 personasQueEntregaronCompras = personasQueEntregaronCompras + 1;
             }
         }
     }
 
+    private boolean alguienEntregaCompras() {
+        final double PROBABILIDAD_ENTREGA_COMPRAS = 0.05;
+
+        return Math.random() <= PROBABILIDAD_ENTREGA_COMPRAS;
+    }
+
     private Cliente crearCliente(boolean preferente) {
         Cliente cliente = new Cliente(
-            siguienteNumeroCliente,
-            tiempo.obtenerMinutoActual(),
+            numeroCliente,
+            tiempo.minuto(),
             preferente
         );
 
-        siguienteNumeroCliente = siguienteNumeroCliente + 1;
+        numeroCliente = numeroCliente + 1;
 
         return cliente;
     }
 
-    private void intentarAnadirClienteNormal(Cliente cliente) {
-        if (clienteDesistePorFilaLarga()) {
+    private void anadirClienteSiEntra(Cliente cliente) {
+        if (this.clienteDesiste()) {
             personasDesistieron = personasDesistieron + 1;
         } else {
             cola.anadirCliente(cliente);
         }
     }
 
-    private void intentarAnadirClientePreferente(Cliente cliente) {
-        if (clienteDesistePorFilaLarga()) {
+    private void anadirPreferenteSiEntra(Cliente cliente) {
+        if (this.clienteDesiste()) {
             personasDesistieron = personasDesistieron + 1;
         } else {
             cola.anadirClientePreferente(cliente);
         }
     }
 
-    private void intentarAnadirClienteColado(Cliente cliente) {
-        if (clienteDesistePorFilaLarga()) {
+    private void anadirColadoSiEntra(Cliente cliente) {
+        if (this.clienteDesiste()) {
             personasDesistieron = personasDesistieron + 1;
         } else {
             cola.anadirClienteColado(cliente);
         }
     }
 
-    private boolean clienteDesistePorFilaLarga() {
+    private boolean clienteDesiste() {
+        final double PROBABILIDAD_DESISTIR = 0.5;
         boolean desiste = false;
 
-        if (cola.obtenerCantidadPersonasEnCola() >= TAMANO_FILA_LARGA) {
+        if (this.filaMuyLarga()) {
             desiste = Math.random() <= PROBABILIDAD_DESISTIR;
         }
 
         return desiste;
     }
 
-    private void procesarParlante() {
-        if (tiempo.esMomentoDeParlante()
-            && cola.obtenerCantidadPersonasEnCola() > TAMANO_AVISO_PARLANTE) {
+    private boolean filaMuyLarga() {
+        final int TAMANO_FILA_LARGA = 30;
 
-            console.writeln("Minuto " + tiempo.obtenerMinutoActual()
+        return cola.obtenerCantidadClientes() >= TAMANO_FILA_LARGA;
+    }
+
+    private void procesarParlante() {
+        if (tiempo.esMomentoDeParlante() && this.filaParaAviso()) {
+
+            console.writeln("Minuto " + tiempo.minuto()
                 + ": pasen por esta caja en orden de fila");
         }
     }
 
-    private void mostrarEstado() {
-        int longitudFila = cola.obtenerCantidadPersonasEnCola();
+    private boolean filaParaAviso() {
+        final int TAMANO_AVISO_PARLANTE = 25;
 
-        console.writeln("Minuto " + tiempo.obtenerMinutoActual()
+        return cola.obtenerCantidadClientes() > TAMANO_AVISO_PARLANTE;
+    }
+
+    private void mostrarEstado() {
+        int longitudFila = cola.obtenerCantidadClientes();
+
+        console.writeln("Minuto " + tiempo.minuto()
             + " | fila: " + longitudFila
             + " personas | longitud: " + longitudFila + " metros");
     }
@@ -186,7 +212,7 @@ public class LaFila {
         console.writeln("-------");
         console.writeln("Personas atendidas: " + personasAtendidas);
         console.writeln("Personas en fila al cierre: "
-            + cola.obtenerCantidadPersonasEnCola());
+            + cola.obtenerCantidadClientes());
         console.writeln("Personas que desistieron: " + personasDesistieron);
         console.writeln("Personas aburridas que se fueron: " + personasAburridas);
         console.writeln("Personas que entregaron sus compras: "
