@@ -15,4 +15,14 @@ public class Cola {
 
     public void insertarClienteEn(int posicion, Cliente cliente) {
     }
+
+    public void anadirClientePreferente(Cliente cliente) {
+    }
+
+    public void anadirClienteColado(Cliente cliente) {
+    }
+
+    public int retirarClientesAburridos(int minutoActual, double probabilidadAburrirse) {
+        return 0;
+    }
 }
