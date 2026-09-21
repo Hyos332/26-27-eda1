@@ -1,13 +1,22 @@
 public class Cliente {
+    private int numero;
+    private int minutoLlegada;
+    private boolean preferente;
+    private int comprasRecibidas;
+
     public Cliente(int numero, int minutoLlegada, boolean preferente) {
+        this.numero = numero;
+        this.minutoLlegada = minutoLlegada;
+        this.preferente = preferente;
+        comprasRecibidas = 0;
     }
 
     public int obtenerNumero() {
-        return 0;
+        return numero;
     }
 
     public int obtenerMinutoLlegada() {
-        return 0;
+        return minutoLlegada;
     }
 
     public boolean esPreferente() {
