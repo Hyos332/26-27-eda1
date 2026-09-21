@@ -79,6 +79,7 @@ public class LaFila {
         procesarAburridos();
         procesarLlegadaPreferente();
         procesarColado();
+        procesarEntregaCompras();
     }
 
     private void procesarAburridos() {
@@ -105,6 +106,14 @@ public class LaFila {
         if (cola.hayClientes() && Math.random() <= PROBABILIDAD_COLADO) {
             Cliente cliente = crearCliente(false);
             intentarAnadirClienteColado(cliente);
+        }
+    }
+
+    private void procesarEntregaCompras() {
+        if (Math.random() <= PROBABILIDAD_ENTREGA_COMPRAS) {
+            if (cola.entregarComprasAOtroCliente()) {
+                personasQueEntregaronCompras = personasQueEntregaronCompras + 1;
+            }
         }
     }
 
@@ -180,5 +189,7 @@ public class LaFila {
             + cola.obtenerCantidadPersonasEnCola());
         console.writeln("Personas que desistieron: " + personasDesistieron);
         console.writeln("Personas aburridas que se fueron: " + personasAburridas);
+        console.writeln("Personas que entregaron sus compras: "
+            + personasQueEntregaronCompras);
     }
 }
