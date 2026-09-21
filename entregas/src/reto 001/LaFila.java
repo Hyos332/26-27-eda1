@@ -57,6 +57,7 @@ public class LaFila {
             procesarReglasExtendidas();
         }
 
+        procesarParlante();
         mostrarEstado();
     }
 
@@ -120,15 +121,46 @@ public class LaFila {
     }
 
     private void intentarAnadirClienteNormal(Cliente cliente) {
-        cola.anadirCliente(cliente);
+        if (clienteDesistePorFilaLarga()) {
+            personasDesistieron = personasDesistieron + 1;
+        } else {
+            cola.anadirCliente(cliente);
+        }
     }
 
     private void intentarAnadirClientePreferente(Cliente cliente) {
-        cola.anadirClientePreferente(cliente);
+        if (clienteDesistePorFilaLarga()) {
+            personasDesistieron = personasDesistieron + 1;
+        } else {
+            cola.anadirClientePreferente(cliente);
+        }
     }
 
     private void intentarAnadirClienteColado(Cliente cliente) {
-        cola.anadirClienteColado(cliente);
+        if (clienteDesistePorFilaLarga()) {
+            personasDesistieron = personasDesistieron + 1;
+        } else {
+            cola.anadirClienteColado(cliente);
+        }
+    }
+
+    private boolean clienteDesistePorFilaLarga() {
+        boolean desiste = false;
+
+        if (cola.obtenerCantidadPersonasEnCola() >= TAMANO_FILA_LARGA) {
+            desiste = Math.random() <= PROBABILIDAD_DESISTIR;
+        }
+
+        return desiste;
+    }
+
+    private void procesarParlante() {
+        if (tiempo.esMomentoDeParlante()
+            && cola.obtenerCantidadPersonasEnCola() > TAMANO_AVISO_PARLANTE) {
+
+            console.writeln("Minuto " + tiempo.obtenerMinutoActual()
+                + ": pasen por esta caja en orden de fila");
+        }
     }
 
     private void mostrarEstado() {
@@ -146,5 +178,7 @@ public class LaFila {
         console.writeln("Personas atendidas: " + personasAtendidas);
         console.writeln("Personas en fila al cierre: "
             + cola.obtenerCantidadPersonasEnCola());
+        console.writeln("Personas que desistieron: " + personasDesistieron);
+        console.writeln("Personas aburridas que se fueron: " + personasAburridas);
     }
 }
