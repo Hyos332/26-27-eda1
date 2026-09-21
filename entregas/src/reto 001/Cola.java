@@ -1,10 +1,9 @@
 public class Cola {
-    private final int CAPACIDAD_MAXIMA = 200;
     private Cliente[] clientes;
     private int tamano;
 
     public Cola() {
-        clientes = new Cliente[CAPACIDAD_MAXIMA];
+        clientes = new Cliente[1000];
         tamano = 0;
     }
 
@@ -131,7 +130,7 @@ public class Cola {
         return tamano > 0;
     }
 
-    public int obtenerCantidadPersonasEnCola() {
+    public int obtenerCantidadClientes() {
         return tamano;
     }
 }
