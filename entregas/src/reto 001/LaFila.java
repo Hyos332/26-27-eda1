@@ -1,8 +1,12 @@
-package entregas.reto 001;
-
 public class LaFila {
-    cola = new Cola();
-    tiempo = new Tiempo();
-    personasAtendidas = 0;
-    console = new Console();
+    public LaFila() {
+    }
+
+    public static void main(String[] args) {
+        LaFila simulacion = new LaFila();
+        simulacion.simular();
+    }
+
+    public void simular() {
+    }
 }
