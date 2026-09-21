@@ -1,16 +1,22 @@
 public class Tiempo {
+    private int minutoActual;
+    private int duracion;
+
     public Tiempo(int duracion) {
+        minutoActual = 0;
+        this.duracion = duracion;
     }
 
     public void avanzar() {
+        minutoActual = minutoActual + 1;
     }
 
     public boolean haFinalizado() {
-        return false;
+        return minutoActual >= duracion;
     }
 
     public int obtenerMinutoActual() {
-        return 0;
+        return minutoActual;
     }
 
     public boolean reglasExtendidasActivas() {
