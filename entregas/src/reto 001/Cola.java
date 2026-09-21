@@ -128,10 +128,10 @@ public class Cola {
     }
 
     public boolean hayClientes() {
-        return false;
+        return tamano > 0;
     }
 
     public int obtenerCantidadPersonasEnCola() {
-        return 0;
+        return tamano;
     }
 }
