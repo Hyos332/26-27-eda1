@@ -17,4 +17,11 @@ public class Cliente {
     public boolean llevaMasDe(int minutoActual, int minutos) {
         return false;
     }
+
+    public void recibirCompras() {
+    }
+
+    public int obtenerComprasRecibidas() {
+        return 0;
+    }
 }
