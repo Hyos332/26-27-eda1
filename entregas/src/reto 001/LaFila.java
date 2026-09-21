@@ -83,7 +83,7 @@ public class LaFila {
 
         if (tiempo.esMomentoDeRevisarAburridos()) {
             retirados = cola.retirarClientesAburridos(
-                tiempo.obtenerMinutoActual(),
+                tiempo.minuto(),
                 PROBABILIDAD_ABURRIRSE
             );
         }
