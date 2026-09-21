@@ -20,14 +20,14 @@ public class Tiempo {
     }
 
     public boolean reglasExtendidasActivas() {
-        return false;
+        return minutoActual >= 20;
     }
 
     public boolean esMomentoDeRevisarAburridos() {
-        return false;
+        return reglasExtendidasActivas() && minutoActual % 5 == 0;
     }
 
     public boolean esMomentoDeParlante() {
-        return false;
+        return minutoActual % 15 == 0;
     }
 }
