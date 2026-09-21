@@ -1,22 +1,12 @@
 public class Cliente {
-
-
-public void añadirCliente(Cliente cliente) {
-    clientes[tamaño] = cliente;
-    tamaño = tamaño + 1;
-}
-
-
-public Cliente quitarCliente() {
-    Cliente cliente = clientes[0];
-
-    for (int i = 0; i < tamaño - 1; i++) {
-        clientes[i] = clientes[i + 1];
+    public Cliente(int numero, int minutoLlegada, boolean preferente) {
     }
 
-    clientes[tamaño - 1] = null;
-    tamaño = tamaño - 1;
+    public int obtenerNumero() {
+        return 0;
+    }
 
-    return cliente;
-}
+    public int obtenerMinutoLlegada() {
+        return 0;
+    }
 }
