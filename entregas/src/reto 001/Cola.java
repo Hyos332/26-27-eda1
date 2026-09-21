@@ -33,10 +33,39 @@ public class Cola {
     }
 
     public Cliente quitarClienteEn(int posicion) {
-        return null;
+        Cliente cliente = null;
+
+        if (posicion >= 0 && posicion < tamano) {
+            cliente = clientes[posicion];
+
+            for (int i = posicion; i < tamano - 1; i++) {
+                clientes[i] = clientes[i + 1];
+            }
+
+            clientes[tamano - 1] = null;
+            tamano = tamano - 1;
+        }
+
+        return cliente;
     }
 
     public void insertarClienteEn(int posicion, Cliente cliente) {
+        if (tamano < clientes.length) {
+            if (posicion < 0) {
+                posicion = 0;
+            }
+
+            if (posicion > tamano) {
+                posicion = tamano;
+            }
+
+            for (int i = tamano; i > posicion; i--) {
+                clientes[i] = clientes[i - 1];
+            }
+
+            clientes[posicion] = cliente;
+            tamano = tamano + 1;
+        }
     }
 
     public void anadirClientePreferente(Cliente cliente) {
