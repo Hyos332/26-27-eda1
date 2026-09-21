@@ -1,33 +1,35 @@
 public class Tiempo {
-    private int minutoActual;
-    private int duracion;
+    private int minuto;
 
-    public Tiempo(int duracion) {
-        minutoActual = 0;
-        this.duracion = duracion;
+    public Tiempo() {
+        minuto = 0;
     }
 
     public void avanzar() {
-        minutoActual = minutoActual + 1;
+        minuto = minuto + 1;
     }
 
     public boolean haFinalizado() {
-        return minutoActual >= duracion;
+        final int DURACION = 120;
+
+        return minuto >= DURACION;
     }
 
-    public int obtenerMinutoActual() {
-        return minutoActual;
+    public int minuto() {
+        return minuto;
     }
 
     public boolean reglasExtendidasActivas() {
-        return minutoActual >= 20;
+        final int MINUTO_INICIO_REGLAS_EXTENDIDAS = 20;
+
+        return minuto >= MINUTO_INICIO_REGLAS_EXTENDIDAS;
     }
 
     public boolean esMomentoDeRevisarAburridos() {
-        return reglasExtendidasActivas() && minutoActual % 5 == 0;
+        return this.reglasExtendidasActivas() && minuto % 5 == 0;
     }
 
     public boolean esMomentoDeParlante() {
-        return minutoActual % 15 == 0;
+        return minuto % 15 == 0;
     }
 }
