@@ -8,4 +8,11 @@ public class Cola {
     public Cliente quitarCliente() {
         return null;
     }
+
+    public Cliente quitarClienteEn(int posicion) {
+        return null;
+    }
+
+    public void insertarClienteEn(int posicion, Cliente cliente) {
+    }
 }
