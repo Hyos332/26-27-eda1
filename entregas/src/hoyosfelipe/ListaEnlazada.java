@@ -49,4 +49,19 @@ class ListaEnlazada {
 
         this.eliminarRepetidosTras(cabeza);
     }
+
+    public static ListaEnlazada fusionar(ListaEnlazada a, ListaEnlazada b) {
+        assert a != null && b != null;
+
+        Nodo dummy = new Nodo(-1);
+        Nodo ultimo = dummy;
+        while (!a.estaVacia() || !b.estaVacia()) {
+            ultimo.siguiente = conMenorCabeza(a, b).sacar();
+            ultimo = ultimo.siguiente;
+        }
+
+        ListaEnlazada resultado = new ListaEnlazada();
+        resultado.cabeza = dummy.siguiente;
+        return resultado;
+    }
 }
