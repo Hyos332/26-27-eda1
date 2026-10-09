@@ -50,6 +50,31 @@ class ListaEnlazada {
         this.eliminarRepetidosTras(cabeza);
     }
 
+    private void eliminarRepetidosTras(Nodo anterior) {
+        assert anterior != null;
+
+        Nodo actual = anterior;
+        while (actual.siguiente != null) {
+            if (this.empiezaRepeticion(actual.siguiente)) {
+                actual.siguiente = this.siguienteDistinto(actual.siguiente);
+            } else {
+                actual = actual.siguiente;
+            }
+        }
+    }
+
+    private boolean empiezaRepeticion(Nodo nodo) {
+        return nodo.siguiente != null && nodo.siguiente.dato == nodo.dato;
+    }
+
+    private Nodo siguienteDistinto(Nodo nodo) {
+        Nodo actual = nodo;
+        while (actual != null && actual.dato == nodo.dato) {
+            actual = actual.siguiente;
+        }
+        return actual;
+    }
+
     public static ListaEnlazada fusionar(ListaEnlazada a, ListaEnlazada b) {
         assert a != null && b != null;
 
