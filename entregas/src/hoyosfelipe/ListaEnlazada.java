@@ -89,4 +89,27 @@ class ListaEnlazada {
         resultado.cabeza = dummy.siguiente;
         return resultado;
     }
+
+    private static ListaEnlazada conMenorCabeza(ListaEnlazada a, ListaEnlazada b) {
+        if (a.estaVacia()) {
+            return b;
+        }
+        if (b.estaVacia()) {
+            return a;
+        }
+        return a.cabeza.dato <= b.cabeza.dato ? a : b;
+    }
+
+    private boolean estaVacia() {
+        return cabeza == null;
+    }
+
+    private Nodo sacar() {
+        assert !this.estaVacia();
+
+        Nodo primero = cabeza;
+        cabeza = cabeza.siguiente;
+        primero.siguiente = null;
+        return primero;
+    }
 }
