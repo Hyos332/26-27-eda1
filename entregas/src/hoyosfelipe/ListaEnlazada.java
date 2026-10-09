@@ -30,4 +30,23 @@ class ListaEnlazada {
         actual.siguiente = nuevo;
         cabeza = dummy.siguiente;
     }
+
+    public void eliminarRepetidos() {
+        Nodo dummy = new Nodo(-1);
+        dummy.siguiente = cabeza;
+        this.eliminarRepetidosTras(dummy);
+        cabeza = dummy.siguiente;
+    }
+
+    public void eliminarRepetidosSinDummy() {
+        while (cabeza != null && this.empiezaRepeticion(cabeza)) {
+            cabeza = this.siguienteDistinto(cabeza);
+        }
+
+        if (cabeza == null) {
+            return;
+        }
+
+        this.eliminarRepetidosTras(cabeza);
+    }
 }
